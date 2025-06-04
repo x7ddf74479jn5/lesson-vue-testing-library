@@ -3,6 +3,6 @@
     "Vue.volar",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "streetsidesoftware/vscode-spell-checker"
+    "streetsidesoftware.vscode-spell-checker"
   ]
 }
