@@ -45,6 +45,7 @@ const renderResult = render(UserProfile, {
   },
   global: {
     plugins: [router, store],
+    stubs: {},
     components: {
       "custom-component": CustomComponent,
     },

@@ -32,6 +32,7 @@ describe("増やすボタンをクリックするとカウントが増加する"
     // render：コンポーネントをDOMにレンダリング
     // @testing-library/vueの方法でコンポーネントを描画
     render(Counter);
+    screen.debug(); // 現在のDOM状態をコンソールに出力（デバッグ用）
 
     // screen.getByRole：アクセシビリティロール（role属性）でボタンを取得
     // name: /increment/i は正規表現で"increment"という文字列を含むボタンを検索
@@ -39,6 +40,7 @@ describe("増やすボタンをクリックするとカウントが増加する"
 
     // user.click()：実際のユーザーのクリック操作をシミュレート
     await user.click(incrementButton);
+    screen.debug(incrementButton); // 現在のDOM状態をコンソールに出力（デバッグ用）
 
     // screen.getByText：指定されたテキストを含む要素を取得
     // toBeInTheDocument()：その要素がDOM内に存在することを検証
@@ -76,15 +78,17 @@ describe("減らすボタンをクリックするとカウントが減少する"
   // @testing-library/vueでの減少ボタンテスト
   test("@testing-library/vue", async () => {
     const user = userEvent.setup();
-    render(Counter);
+    render(Counter, {
+      props: { initialCount: 1 }, // 初期カウントを1に設定
+    });
 
-    // 増やすボタンと減らすボタンを両方取得
-    const incrementButton = screen.getByRole("button", { name: /increment/i });
+    // // 増やすボタンと減らすボタンを両方取得
     const decrementButton = screen.getByRole("button", { name: /decrement/i });
 
     // まず増やしてから減らす操作をテスト
     // 初期値0から1に増やし、その後0に戻すことで減少機能をテスト
-    await user.click(incrementButton);
+    expect(screen.getByText("Count: 1")).toBeInTheDocument();
+
     await user.click(decrementButton);
 
     // カウントが0に戻ったことを検証
@@ -105,7 +109,7 @@ describe("カウントが0の場合、減らすボタンは無効化される", 
     await wrapper.vm.$nextTick();
 
     // 2番目のボタン（減らすボタン）を取得
-    const decrementButton = wrapper.findAll("button").at(1);
+    const [, decrementButton] = wrapper.findAll("button");
 
     // disabled属性が設定されていることを検証
     // toBeDefined()：属性が存在することを確認
